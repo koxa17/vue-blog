@@ -8,12 +8,6 @@
         <div class="pt-2 pb-3" :class="colClass">
          <div class="container">
            <router-view/>
-           <router-view/>
-           <router-view/>
-           <router-view/>
-           <router-view/>
-           <router-view/>
-           <router-view/>
          </div>
         </div>
         <div class="col-12 col-md-3 ps-0 pe-0 ps-md-2 pe-md-2 pt-2 pb-md-2 border-side--left mb-3 mb-md-0 right-side-bar">
