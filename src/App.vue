@@ -1,16 +1,18 @@
 <template>
   <div id="app">
     <div class="container-fluid h-100">
-      <div class="row h-100 d-flex flex-nowrap flex-column-reverse justify-content-end flex-md-row justify-content-md-start">
+      <div
+          class="row h-100 d-flex flex-nowrap flex-column-reverse justify-content-end flex-md-row justify-content-md-start">
         <div class="col-12 col-md-1 p-0 d-flex flex-column align-items-center border-side--right max-width position">
           <side-bar></side-bar>
         </div>
         <div class="pt-2 pb-3" :class="colClass">
-         <div class="container">
-           <router-view/>
-         </div>
+          <div class="container">
+            <router-view/>
+          </div>
         </div>
-        <div class="col-12 col-md-3 ps-0 pe-0 ps-md-2 pe-md-2 pt-2 pb-md-2 border-side--left mb-3 mb-md-0 right-side-bar">
+        <div
+            class="col-12 col-md-3 ps-0 pe-0 ps-md-2 pe-md-2 pt-2 pb-md-2 border-side--left mb-3 mb-md-0 right-side-bar">
           <filters></filters>
         </div>
       </div>
@@ -22,13 +24,19 @@
 import Vue from "vue";
 import SideBar from "@/components/side-bar";
 import Filters from "@/components/filters";
+import {getDistanceDate} from "@/assets/js/date";
+// import {writeArticlesData} from "@/assets/api/myBase";
+
 
 export default Vue.extend({
   components: {Filters, SideBar},
-  data(){
+  data() {
     return {
-      sideFilter: false
+      sideFilter: false,
     }
+  },
+  methods: {
+
   },
   computed: {
     colClass() {
