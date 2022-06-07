@@ -24,8 +24,6 @@
 import Vue from "vue";
 import SideBar from "@/components/side-bar";
 import Filters from "@/components/filters";
-import {getDistanceDate} from "@/assets/js/date";
-// import {writeArticlesData} from "@/assets/api/myBase";
 
 
 export default Vue.extend({
