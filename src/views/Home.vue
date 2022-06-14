@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="category__body">
-            <carousel id="carousel_1"/>
+            <carousel id="carousel_1" :articles="articles"/>
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
             </div>
           </div>
           <div class="category__body">
-            <carousel id="carousel_2" :ride="false"/>
+            <carousel id="carousel_2" :ride="false" :articles="articles"/>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="category__body">
-            <carousel id="carousel_3" :ride="true"/>
+            <carousel id="carousel_3" :ride="true" :articles="articles"/>
           </div>
         </div>
       </div>
@@ -58,15 +58,23 @@
 <script lang="ts">
 import Vue from "vue";
 import Carousel from "@/components/carousel.vue";
+import { getBase } from "@/assets/api/firebase";
+
 
 export default Vue.extend({
   name: "Home",
   components: {Carousel},
   props: {},
   data() {
-    return {}
+    return {
+      articles: {} || []
+    }
+  },
+  async mounted() {
+    this.articles = await getBase('articles')
   }
 })
+
 </script>
 
 <style scoped lang="scss">

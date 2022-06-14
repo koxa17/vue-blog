@@ -14,7 +14,10 @@ const routes: Array<RouteConfig> = [
   {
     path: "/language/:name",
     name: 'language',
-    component: Language
+    component: Language,
+    meta: {
+      filters: true
+    }
   }
 ];
 

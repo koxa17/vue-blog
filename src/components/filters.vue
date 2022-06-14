@@ -61,12 +61,12 @@ export default Vue.extend({
 <style scoped lang="scss">
 .filters {
   width: 100%;
-  border-bottom: 1px solid #b2b2b2;
+  border-bottom: none;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .filters {
-    border-bottom: none;
+    border-bottom: 1px solid #b2b2b2;
   }
 }
 </style>

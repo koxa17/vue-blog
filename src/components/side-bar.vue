@@ -1,5 +1,5 @@
 <template>
-  <div class="side-bar ps-2 pe-2 pt-3 pb-3 position-fixed d-flex flex-row flex-md-column justify-content-between border-top">
+  <div class="side-bar ps-2 pe-2 pt-3 pb-3 d-flex flex-row flex-md-column justify-content-between border-top">
     <div class="side-bar__logo">
       <router-link to="/" class="side-bar__logo__link">
         <img src="@/assets/images/blog.png" alt="Логотип">
@@ -46,6 +46,7 @@ export default Vue.extend({
 
   &__logo {
     width: 60px;
+    margin: 0;
 
     &__link {
       display: block;
@@ -63,7 +64,13 @@ export default Vue.extend({
   .side-bar{
     height: 100%;
     width: auto;
+    max-width: 130px;
     background-color: transparent;
+
+    &__logo {
+      margin: 0 auto;
+    }
+
   }
 }
 

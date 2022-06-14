@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getDatabase, push, ref, set} from "firebase/database";
+import {child, get, getDatabase, push, ref, set} from "firebase/database";
+import {getCurrentDate} from "@/assets/js/date";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAi0sbW_ixn3d4F3hWaCEXyGcctsywQL-U",
@@ -15,9 +16,28 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-export function generationId() {
+function generationId() {
     const _articlesRef = ref(database, 'articles')
     return push(_articlesRef)
 }
 
-export default database
+function writeArticlesData(url:any, data:any) {
+    data.created = getCurrentDate();
+    return set(url, data);
+}
+
+async function getBase(path:string):Promise<object | [] | string> {
+    const dbRef = ref(getDatabase());
+    return get(child(dbRef, path)).then(res => {
+        if (res.exists()) {
+            return res.val()
+        } else {
+            return "Данные не найдены";
+        }
+    }).catch(e => {
+        throw e
+    })
+}
+
+
+export {writeArticlesData, getBase}
