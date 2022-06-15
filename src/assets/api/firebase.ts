@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {child, get, getDatabase, push, ref, set} from "firebase/database";
+import {child, get, getDatabase, push, ref, set, update} from "firebase/database";
 import {getCurrentDate} from "@/assets/js/date";
+import {createArray} from "@/assets/js/function";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAi0sbW_ixn3d4F3hWaCEXyGcctsywQL-U",
@@ -16,14 +17,31 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-function generationId() {
-    const _articlesRef = ref(database, 'articles')
+function generationId(path:string) {
+    const _articlesRef = ref(database, path)
     return push(_articlesRef)
 }
 
-function writeArticlesData(url:any, data:any) {
+function writeArticlesData(data:any) {
     data.created = getCurrentDate();
-    return set(url, data);
+    return set(generationId('articles'), data);
+}
+
+//
+// @params data string
+// передаем новый тег
+async function writeTagData(data:any) {
+    const db = getDatabase()
+
+    const currentTags = await get(child(ref(db), 'tags')).then(res => {
+        return res.val()
+    })
+
+    const updates:any = {}
+    updates['/tags'] = createArray(currentTags, data)
+
+    return update(ref(db), updates);
+
 }
 
 async function getBase(path:string):Promise<object | [] | string> {
@@ -40,4 +58,4 @@ async function getBase(path:string):Promise<object | [] | string> {
 }
 
 
-export {writeArticlesData, getBase}
+export {writeArticlesData, writeTagData, getBase}

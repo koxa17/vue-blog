@@ -1,47 +1,26 @@
 <template>
   <div class="filters ps-2 pe-2 pb-3 pb-md-0">
+    <h4 class="pb-3">Фильтры</h4>
     <form class="row g-3">
-      <div class="col-md-6">
-        <label for="inputEmail4" class="form-label">Email</label>
-        <input type="email" class="form-control" id="inputEmail4">
-      </div>
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword4">
+      <div class="col-12">
+        <label for="inputEmail4" class="form-label">Названию</label>
+        <input type="text" class="form-control" id="inputEmail4" placeholder="Подключение шрифтов">
       </div>
       <div class="col-12">
-        <label for="inputAddress" class="form-label">Address</label>
-        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+        <label for="inputAddress" class="form-label">Описанию</label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="Нужно импортировать script">
       </div>
       <div class="col-12">
-        <label for="inputAddress2" class="form-label">Address 2</label>
-        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-      </div>
-      <div class="col-md-6">
-        <label for="inputCity" class="form-label">City</label>
-        <input type="text" class="form-control" id="inputCity">
-      </div>
-      <div class="col-md-4">
-        <label for="inputState" class="form-label">State</label>
-        <select id="inputState" class="form-select">
-          <option selected>Choose...</option>
-          <option>...</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <label for="inputZip" class="form-label">Zip</label>
-        <input type="text" class="form-control" id="inputZip">
+        <label for="selectTags" class="form-label">По тегу</label>
+        <v-select id="selectTags" v-model="selected" :options="tags" :close-on-select="false">
+          <!-- eslint-disable-next-line vue/no-unused-vars  -->
+          <template #no-options="{ tags }">
+            Такой тег не найден
+          </template>
+        </v-select>
       </div>
       <div class="col-12">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="gridCheck">
-          <label class="form-check-label" for="gridCheck">
-            Check me out
-          </label>
-        </div>
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary">Sign in</button>
+        <button type="submit" class="btn btn-primary">Поиск</button>
       </div>
     </form>
   </div>
@@ -49,11 +28,28 @@
 
 <script>
 import Vue from 'vue'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
+import {getBase} from "@/assets/api/firebase";
 export default Vue.extend({
   name: "filters",
   props: {},
+  components: {
+    vSelect
+  },
   data() {
-    return {}
+    return {
+      selected: [],
+      tags: []
+    }
+  },
+  async mounted() {
+    this.tags = await getBase('/tags')
+  },
+  methods:{
+    addTag(newTag) {
+      console.log(newTag)
+    }
   }
 })
 </script>

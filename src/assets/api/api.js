@@ -1,4 +1,3 @@
-import firebaseApp from "@/assets/api/firebase";
 import axios from 'axios';
 
 const instance = axios.create({
