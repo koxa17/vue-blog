@@ -9,6 +9,6 @@ cd dist
 git init
 git add -A
 git commit -m 'Deploy'
-git push -f git@github.com:koxa17/vueRickAndMorty.git master:gh-pages
+git push -f git@github.com:koxa17/vue-blog.git master:gh-pages
 
 cd -
