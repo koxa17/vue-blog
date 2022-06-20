@@ -1,13 +1,19 @@
 function createArray(currentArray:[], data:string | []):[] | string{
-
     if(Array.isArray(data)) {
-        data.forEach(item => {
-            if(!currentArray.includes(item)) {
-                currentArray.push(item)
-            }
-        })
+        if(currentArray?.length){
+            data.forEach(item => {
+                if(!currentArray.includes(item)) {
+                    currentArray.push(item)
+                }
+            })
+        } else {
+            currentArray = data
+        }
     } else {
-        if(!currentArray.includes(data as never)) {
+        if(currentArray && !currentArray.includes(data as never)) {
+            currentArray.push(data as never)
+        } else {
+            currentArray = []
             currentArray.push(data as never)
         }
     }
