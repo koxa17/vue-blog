@@ -40,7 +40,7 @@ export default Vue.extend({
   data() {
     return {
       selected: [],
-      tags: []
+      tags: [],
     }
   },
   async mounted() {

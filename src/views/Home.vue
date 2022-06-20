@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="category__body">
-            <carousel id="carousel_1" :articles="articles"/>
+            <carousel id="carousel_1" :articles="articles.html"/>
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
             </div>
           </div>
           <div class="category__body">
-            <carousel id="carousel_2" :ride="false" :articles="articles"/>
+            <carousel id="carousel_2" :ride="false" :articles="articles.css"/>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="category__body">
-            <carousel id="carousel_3" :ride="true" :articles="articles"/>
+            <carousel id="carousel_3" :ride="true" :articles="articles.js"/>
           </div>
         </div>
       </div>

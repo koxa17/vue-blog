@@ -11,7 +11,7 @@
       <div class="carousel-item" :class="{active: idx === currentSlide}" v-for="(art, id, idx) in articles" :key="id">
         <div class="card text-center">
           <div class="card-header">
-            <span class="badge rounded-pill">html</span>
+            <span class="badge rounded-pill" v-for="(tag, idx) in art.tags" :key="tag + idx">{{tag}}</span>
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ art.title }}</h5>
@@ -19,18 +19,45 @@
             <a href="#" class="btn btn-outline-info">Читать</a>
           </div>
           <div class="card-footer text-muted">
-            {{ getDistance(art.created) }}
+            {{ getDistance(art.created)}}
           </div>
         </div>
       </div>
-
     </div>
   </div>
+
+  <div v-else>
+    <div id="999999" class="carousel slide">
+      <div class="carousel-indicators">
+          <button type="button" data-bs-target="`#999999`" class="active"
+                  aria-current="true" aria-label="Slide 1" ></button>
+      </div>
+      <div class="carousel-inner">
+
+        <div class="carousel-item active">
+          <div class="card text-center">
+            <div class="card-header">
+              <span class="badge rounded-pill">тег</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Нет не одной статьи</h5>
+              <p class="card-text">Нужно написать статью</p>
+              <a href="#" class="btn btn-outline-info">Написать</a>
+            </div>
+            <div class="card-footer text-muted">
+              Сегодня: {{getDate()}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import {getDistanceDate} from "@/assets/js/date";
+import {getDistanceDate, getCurrentDate} from "@/assets/js/date";
 export default Vue.extend({
   name: "carousel",
   props: {
@@ -46,7 +73,6 @@ export default Vue.extend({
     },
     articles: {
       type: [Object, Array],
-      required: true
     }
   },
   data() {
@@ -57,6 +83,9 @@ export default Vue.extend({
   methods: {
     getDistance(date:string):string {
       return getDistanceDate(date)
+    },
+    getDate() {
+      return getCurrentDate()
     }
   }
 })

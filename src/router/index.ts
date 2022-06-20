@@ -16,7 +16,12 @@ const routes: Array<RouteConfig> = [
     name: 'language',
     component: Language,
     meta: {
-      filters: true
+      filters: true,
+      adding: false
+    },
+    props: {
+      filters: true,
+      adding: false
     }
   }
 ];

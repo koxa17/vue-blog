@@ -15,4 +15,9 @@ function createArray(currentArray:[], data:string | []):[] | string{
     return currentArray
 }
 
-export {createArray}
+function searchParagraph(p:string):string {
+    p = p.slice(3, p.length - 4)
+    return p
+}
+
+export {createArray, searchParagraph}

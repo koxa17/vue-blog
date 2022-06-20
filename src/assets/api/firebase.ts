@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {child, get, getDatabase, push, ref, set, update} from "firebase/database";
+import {child, get, getDatabase, push, ref, set, update, remove} from "firebase/database";
 import {getCurrentDate} from "@/assets/js/date";
 import {createArray} from "@/assets/js/function";
 
@@ -22,9 +22,9 @@ function generationId(path:string) {
     return push(_articlesRef)
 }
 
-function writeArticlesData(data:any) {
+function writeArticlesData(path:string, data:any) {
     data.created = getCurrentDate();
-    return set(generationId('articles'), data);
+    return set(generationId(`articles/${path}`), data);
 }
 
 //
@@ -44,7 +44,7 @@ async function writeTagData(data:any) {
 
 }
 
-async function getBase(path:string):Promise<object | [] | string> {
+function getBase(path:string):Promise<object | [] | string> {
     const dbRef = ref(getDatabase());
     return get(child(dbRef, path)).then(res => {
         if (res.exists()) {
@@ -57,5 +57,12 @@ async function getBase(path:string):Promise<object | [] | string> {
     })
 }
 
+function removeArticle(path:string):void {
+    const dbRef = ref(getDatabase());
+    set(child(dbRef, `articles/${path}`), null).then(r =>{
+        console.log(r)
+    });
+}
 
-export {writeArticlesData, writeTagData, getBase}
+
+export {writeArticlesData, writeTagData, getBase, removeArticle}
