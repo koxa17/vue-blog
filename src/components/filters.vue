@@ -13,10 +13,14 @@
       <div class="col-12">
         <label for="selectTags" class="form-label">По тегу</label>
         <v-select id="selectTags" v-model="selected" :options="tags" :close-on-select="false">
-          <!-- eslint-disable-next-line vue/no-unused-vars  -->
-          <template #no-options="{ tags }">
-            Такой тег не найден
-          </template>
+            <!-- eslint-disable-next-line vue/no-unused-vars  -->
+            <template v-if="tags.length" #no-options="{ search, searching }">
+              Такой тег не найден
+            </template>
+            <!-- eslint-disable-next-line vue/no-unused-vars  -->
+            <template v-else #no-options="{ loading }">
+              {{ error }}
+            </template>
         </v-select>
       </div>
       <div class="col-12">
@@ -41,10 +45,16 @@ export default Vue.extend({
     return {
       selected: [],
       tags: [],
+      error: ''
     }
   },
   async mounted() {
-    this.tags = await getBase('/tags')
+    const data = await getBase('tags')
+    if(typeof data === 'object') {
+      this.tags = data
+    } else {
+     this.error = data
+    }
   },
   methods:{
     addTag(newTag) {

@@ -14,7 +14,7 @@
 
       <redactor v-if="adding" :tags="tags" :name-language="languageName"/>
 
-      <div v-else-if="!adding && typeof articles === 'object'">
+      <div v-else-if="!adding && articles === 'object'">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
           <div class="col p-2" v-for="(article, id) of articles" :key="id">
             <div class="card">
@@ -40,7 +40,7 @@
         </div>
 
 
-        <div v-if="typeof articles == 'string'" class="d-flex flex-column align-items-center justify-content-center">
+        <div v-if="typeof articles === 'string'" class="d-flex flex-column align-items-center justify-content-center">
           <h2>Здесь пока нет не одной статьи</h2>
           <p>Что бы добавить статью нажмите на кнопку </p>
           <button class="btn btn-add d-flex align-items-center" @click="adding = !adding">
@@ -58,7 +58,7 @@
 <script>
 import Vue from 'vue';
 import 'vue-select/dist/vue-select.css';
-import {getBase, removeArticle} from "@/assets/api/firebase";
+import {getBase, removeArticle, writeTagData} from "@/assets/api/firebase";
 import Redactor from "@/components/redactor";
 import Badge from "@/components/Badge";
 
@@ -70,28 +70,15 @@ export default Vue.extend({
     return {
       tags: [],
       articles: [],
-      reload: 0
+      reload: 0,
+      adding: false
     }
   },
   computed: {
     languageName() {
       return this.$route.params.name
     },
-    adding: {
-      // TODO придумать что-то)))
-      get: async () => {
-        console.log(this.$route.meta.adding)
-        return await this.$route.meta.adding
-      },
-      set: async(newValue) => {
-        console.log(newValue)
-        await this.$router.push({
-          meta: {
-            adding: newValue
-          }
-        })
-      }
-    },
+
   },
   mounted() {
     this.reload++
@@ -126,7 +113,7 @@ export default Vue.extend({
       this.reload++
     },
     async getTags() {
-      this.tags = await getBase('/tags')
+      this.tags = await getBase('tags')
     },
     async getArticles() {
       this.articles = await getBase(`articles/${this.languageName}`)

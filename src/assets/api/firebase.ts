@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import {child, get, getDatabase, push, ref, set, update, remove} from "firebase/database";
 import {getCurrentDate} from "@/assets/js/date";
 import {createArray} from "@/assets/js/function";
+import {BASE_URL} from "@/assets/api/constapi";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAi0sbW_ixn3d4F3hWaCEXyGcctsywQL-U",
@@ -24,7 +25,7 @@ function generationId(path:string) {
 
 function writeArticlesData(path:string, data:any) {
     data.created = getCurrentDate();
-    return set(generationId(`articles/${path}`), data);
+    return set(generationId(`${BASE_URL}/articles/${path}`), data);
 }
 
 //
@@ -33,12 +34,12 @@ function writeArticlesData(path:string, data:any) {
 async function writeTagData(data:any) {
     const db = getDatabase()
 
-    const currentTags = await get(child(ref(db), 'tags')).then(res => {
+    const currentTags = await get(child(ref(db), `${BASE_URL}/tags`)).then(res => {
         return res.val()
     })
 
     const updates:any = {}
-    updates['/tags'] = createArray(currentTags, data)
+    updates[`${BASE_URL}/tags`] = createArray(currentTags, data)
 
     return update(ref(db), updates);
 
@@ -46,7 +47,7 @@ async function writeTagData(data:any) {
 
 function getBase(path:string):Promise<object | [] | string> {
     const dbRef = ref(getDatabase());
-    return get(child(dbRef, path)).then(res => {
+    return get(child(dbRef, `${BASE_URL}/${path}`)).then(res => {
         if (res.exists()) {
             return res.val()
         } else {
@@ -59,7 +60,7 @@ function getBase(path:string):Promise<object | [] | string> {
 
 function removeArticle(path:string):void {
     const dbRef = ref(getDatabase());
-    set(child(dbRef, `articles/${path}`), null).then(r =>{
+    set(child(dbRef, `${BASE_URL}/articles/${path}`), null).then(r =>{
         console.log(r)
     });
 }

@@ -24,6 +24,7 @@
 import Vue from "vue";
 import SideBar from "@/components/side-bar";
 import Filters from "@/components/filters";
+import {writeTagData} from "@/assets/api/firebase";
 // import {writeTagData} from "@/assets/api/firebase";
 
 
@@ -35,7 +36,7 @@ export default Vue.extend({
     }
   },
   async mounted() {
-    // await writeTagData(['html', 'angular', 'php'])
+    await writeTagData(['html', 'css', 'js'])
   },
   methods: {
 
