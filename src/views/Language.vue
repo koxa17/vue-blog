@@ -14,8 +14,8 @@
 
       <redactor v-if="adding" :tags="tags" :name-language="languageName"/>
 
-      <div v-else-if="!adding && articles === 'object'">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
+      <div v-else>
+        <div v-if="articles === 'object'" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
           <div class="col p-2" v-for="(article, id) of articles" :key="id">
             <div class="card">
               <button class="remove-icon" @click="removeItem(id)">
