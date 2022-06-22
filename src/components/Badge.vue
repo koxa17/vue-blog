@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
 
-export default Vue.extend({
+
+export default {
   name: "Badge",
   props: {
     name: {
@@ -29,7 +29,7 @@ export default Vue.extend({
       }
     }
   }
-})
+}
 </script>
 
 <style scoped lang="scss">

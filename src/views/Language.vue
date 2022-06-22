@@ -56,13 +56,12 @@
   </div>
 </template>
 <script>
-import Vue from 'vue';
 import 'vue-select/dist/vue-select.css';
-import {getBase, removeArticle, writeTagData} from "@/assets/api/firebase";
+import {getBase, removeArticle} from "@/assets/api/firebase";
 import Redactor from "@/components/redactor";
 import Badge from "@/components/Badge";
 
-export default Vue.extend({
+export default {
   name: "Language",
   props: {},
   components: {Badge, Redactor},
@@ -126,7 +125,7 @@ export default Vue.extend({
       this.getArticles()
     },
   }
-})
+}
 </script>
 
 <style scoped lang="scss">

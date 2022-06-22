@@ -21,13 +21,12 @@
 </template>
 
 <script>
-import Vue from "vue";
 import SideBar from "@/components/side-bar";
 import Filters from "@/components/filters";
 // import {writeTagData} from "@/assets/api/firebase";
 
 
-export default Vue.extend({
+export default {
   components: {Filters, SideBar},
   data() {
     return {
@@ -50,7 +49,7 @@ export default Vue.extend({
       this.sideFilter = value === 'language';
     }
   }
-})
+}
 </script>
 
 <style lang="scss">

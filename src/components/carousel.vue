@@ -55,10 +55,9 @@
 
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script>
 import {getDistanceDate, getCurrentDate} from "@/assets/js/date";
-export default Vue.extend({
+export default {
   name: "carousel",
   props: {
     id: {
@@ -67,7 +66,7 @@ export default Vue.extend({
     },
     ride: {
       type: [Boolean, String],
-      default: ():string => {
+      default: () => {
         return 'carousel'
       }
     },
@@ -81,14 +80,14 @@ export default Vue.extend({
     }
   },
   methods: {
-    getDistance(date:string):string {
+    getDistance(date) {
       return getDistanceDate(date)
     },
     getDate() {
       return getCurrentDate()
     }
   }
-})
+}
 </script>
 
 <style scoped lang="scss">

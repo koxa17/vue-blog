@@ -19,13 +19,12 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import { VueEditor } from "vue2-editor";
 import vSelect from 'vue-select'
 import {writeArticlesData} from "@/assets/api/firebase";
 import AWN from "awesome-notifications";
 import 'awesome-notifications/dist/style.css';
-export default Vue.extend({
+export default {
   name: "redactor",
   props: {
     tags:{
@@ -148,7 +147,7 @@ export default Vue.extend({
     },
 
   }
-})
+}
 </script>
 
 <style scoped>

@@ -1,4 +1,4 @@
-function createArray(currentArray:[], data:string | []):[] | string{
+function createArray(currentArray, data){
     if(Array.isArray(data)) {
         if(currentArray?.length){
             data.forEach(item => {
@@ -10,11 +10,11 @@ function createArray(currentArray:[], data:string | []):[] | string{
             currentArray = data
         }
     } else {
-        if(currentArray && !currentArray.includes(data as never)) {
-            currentArray.push(data as never)
+        if(currentArray && !currentArray.includes(data)) {
+            currentArray.push(data)
         } else {
             currentArray = []
-            currentArray.push(data as never)
+            currentArray.push(data)
         }
     }
 

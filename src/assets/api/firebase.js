@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {child, get, getDatabase, push, ref, set, update, remove} from "firebase/database";
+import {child, get, getDatabase, push, ref, set, update} from "firebase/database";
 import {getCurrentDate} from "@/assets/js/date";
 import {createArray} from "@/assets/js/function";
 import {BASE_URL} from "@/assets/api/constapi";
@@ -18,12 +18,12 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-function generationId(path:string) {
+function generationId(path) {
     const _articlesRef = ref(database, path)
     return push(_articlesRef)
 }
 
-function writeArticlesData(path:string, data:any) {
+function writeArticlesData(path, data) {
     data.created = getCurrentDate();
     return set(generationId(`${BASE_URL}/articles/${path}`), data);
 }
@@ -31,21 +31,21 @@ function writeArticlesData(path:string, data:any) {
 //
 // @params data string
 // передаем новый тег
-async function writeTagData(data:any) {
+async function writeTagData(data) {
     const db = getDatabase()
 
     const currentTags = await get(child(ref(db), `${BASE_URL}/tags`)).then(res => {
         return res.val()
     })
 
-    const updates:any = {}
+    const updates = {}
     updates[`${BASE_URL}/tags`] = createArray(currentTags, data)
 
     return update(ref(db), updates);
 
 }
 
-function getBase(path:string):Promise<object | [] | string> {
+function getBase(path){
     const dbRef = ref(getDatabase());
     return get(child(dbRef, `${BASE_URL}/${path}`)).then(res => {
         if (res.exists()) {
@@ -58,7 +58,7 @@ function getBase(path:string):Promise<object | [] | string> {
     })
 }
 
-function removeArticle(path:string):void {
+function removeArticle(path) {
     const dbRef = ref(getDatabase());
     set(child(dbRef, `${BASE_URL}/articles/${path}`), null).then(r =>{
         console.log(r)

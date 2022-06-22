@@ -55,25 +55,24 @@
   </main>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script>
 import Carousel from "@/components/carousel.vue";
 import { getBase } from "@/assets/api/firebase";
 
 
-export default Vue.extend({
+export default{
   name: "Home",
   components: {Carousel},
   props: {},
   data() {
     return {
-      articles: {} || []
+      articles: []
     }
   },
   async mounted() {
     this.articles = await getBase('articles')
   }
-})
+}
 
 </script>
 

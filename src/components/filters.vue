@@ -31,11 +31,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css';
 import {getBase} from "@/assets/api/firebase";
-export default Vue.extend({
+export default {
   name: "filters",
   props: {},
   components: {
@@ -61,7 +60,7 @@ export default Vue.extend({
       console.log(newTag)
     }
   }
-})
+}
 </script>
 
 <style scoped lang="scss">
