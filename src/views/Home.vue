@@ -57,7 +57,7 @@
 
 <script>
 import Carousel from "@/components/carousel.vue";
-import { getBase } from "@/assets/api/firebase";
+import {mapGetters} from "vuex";
 
 
 export default{
@@ -65,12 +65,10 @@ export default{
   components: {Carousel},
   props: {},
   data() {
-    return {
-      articles: []
-    }
+    return {}
   },
-  async mounted() {
-    this.articles = await getBase('articles')
+  computed: {
+    ...mapGetters({articles: 'getArticles'})
   }
 }
 

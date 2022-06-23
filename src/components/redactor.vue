@@ -9,7 +9,7 @@
     <div class="row">
 
       <div class="hstack gap-3">
-        <v-select v-model="selected" id="selectTags" class="style-chooser me-auto" :class="{error: error.validate === 'select'}" placeholder="Выберите теги" :options="tags" :close-on-select="false" multiple taggable push-tag></v-select>
+        <v-select v-model="selected" id="selectTags" class="style-chooser me-auto" :class="{error: error.validate === 'select'}" placeholder="Выберите теги" :options="tags" :close-on-select="false" multiple taggable push-tag label="name"></v-select>
           <button @click="saveContent" class="btn btn-success" :class="{disabled: disabled}">Сохранить</button>
           <div class="vr"></div>
           <button type="button" class="btn btn-outline-danger" @click="resetAll">Сбросить</button>
@@ -21,9 +21,9 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import vSelect from 'vue-select'
-import {writeArticlesData} from "@/assets/api/firebase";
 import AWN from "awesome-notifications";
 import 'awesome-notifications/dist/style.css';
+import {mapActions} from "vuex";
 export default {
   name: "redactor",
   props: {
@@ -67,6 +67,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['save_article__base']),
     // установить контент в редактор
     setEditorContent(content) {
       this.content = content;
@@ -81,16 +82,28 @@ export default {
           tags: this.selected,
         }
 
-        writeArticlesData(this.nameLanguage, article).then(() => {
-          this.content = '<h1>Название статьи</h1>'
-          this.selected = []
-          this.notifications.success('Статья успешно сохранена!')
+        // writeArticlesData(this.nameLanguage, article).then(() => {
+        //   this.content = '<h1>Название статьи</h1>'
+        //   this.selected = []
+        //   this.notifications.success('Статья успешно сохранена!')
+        // }).catch(err => {
+        //   this.notifications.alert(err)
+        //   throw err
+        // }).finally(() => {
+        //   this.disabled = false
+        // })
+
+        this.save_article__base({nameLanguage: this.nameLanguage, article}).then((res) => {
+          console.log(res)
+            this.content = '<h1>Название статьи</h1>'
+            this.selected = []
+            this.notifications.success('Статья успешно сохранена!')
         }).catch(err => {
-          this.notifications.alert(err)
-          throw err
-        }).finally(() => {
-          this.disabled = false
-        })
+            this.notifications.alert(err)
+            throw err
+          }).finally(() => {
+            this.disabled = false
+          })
       }
 
     },
@@ -124,7 +137,6 @@ export default {
       return !(this.content === '<h1>Название статьи</h1>' || this.content === '<h1><br></h1>');
     },
     resetAll() {
-
       let onOk = () => {
         this.content = '<h1>Название статьи</h1>'
         this.selected = []

@@ -12,7 +12,7 @@
       </div>
       <div class="col-12">
         <label for="selectTags" class="form-label">По тегу</label>
-        <v-select id="selectTags" v-model="selected" :options="tags" :close-on-select="false">
+        <v-select id="selectTags" v-model="selected" :options="tags" :close-on-select="false" label="name">
             <!-- eslint-disable-next-line vue/no-unused-vars  -->
             <template v-if="tags.length" #no-options="{ search, searching }">
               Такой тег не найден
@@ -33,7 +33,7 @@
 <script>
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css';
-import {getBase} from "@/assets/api/firebase";
+import {mapGetters} from "vuex";
 export default {
   name: "filters",
   props: {},
@@ -43,22 +43,16 @@ export default {
   data() {
     return {
       selected: [],
-      tags: [],
       error: ''
-    }
-  },
-  async mounted() {
-    const data = await getBase('tags')
-    if(typeof data === 'object') {
-      this.tags = data
-    } else {
-     this.error = data
     }
   },
   methods:{
     addTag(newTag) {
       console.log(newTag)
     }
+  },
+  computed: {
+    ...mapGetters({tags: 'getTags'})
   }
 }
 </script>

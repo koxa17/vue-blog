@@ -1,6 +1,6 @@
 <template>
-  <span class="badge" :class="classBackground">
-    {{ name }}
+  <span class="badge" :class="classBackground" :style="{ backgroundColor: tag.bg_color }">
+    {{ tag.name }}
   </span>
 </template>
 
@@ -10,8 +10,8 @@
 export default {
   name: "Badge",
   props: {
-    name: {
-      type: String,
+    tag: {
+      type: Object,
       required: true
     },
     roundedPill: {
@@ -47,21 +47,5 @@ export default {
   &:not(:last-child){
     margin-right: 5px;
   }
-}
-
-.html {
-  background: #e44d26;
-}
-
-.css {
-  background: #2299f8;
-}
-
-.js {
-  background: #ffde25;
-}
-
-.vue {
-  background: #42b883;
 }
 </style>

@@ -23,7 +23,6 @@
 <script>
 import SideBar from "@/components/side-bar";
 import Filters from "@/components/filters";
-// import {writeTagData} from "@/assets/api/firebase";
 
 
 export default {
@@ -34,7 +33,8 @@ export default {
     }
   },
   async mounted() {
-    // await writeTagData(['html', 'css', 'js'])
+    await this.$store.dispatch('get_article__base', 'articles')
+    await this.$store.dispatch('get_tags__base', 'tags')
   },
   computed: {
     colClass() {

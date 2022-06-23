@@ -14,8 +14,8 @@
             <span class="badge rounded-pill" v-for="(tag, idx) in art.tags" :key="tag + idx">{{tag}}</span>
           </div>
           <div class="card-body">
-            <h5 class="card-title">{{ art.title }}</h5>
-            <p class="card-text">{{ art.description }}</p>
+            <h5 class="card-title">{{ articleTitle(art) }}</h5>
+            <p class="card-text">{{ articleDesc(art) }}</p>
             <a href="#" class="btn btn-outline-info">Читать</a>
           </div>
           <div class="card-footer text-muted">
@@ -57,6 +57,7 @@
 
 <script>
 import {getDistanceDate, getCurrentDate} from "@/assets/js/date";
+import {articleDesc, articleTitle} from "@/assets/js/function";
 export default {
   name: "carousel",
   props: {
@@ -80,6 +81,8 @@ export default {
     }
   },
   methods: {
+    articleTitle,
+    articleDesc,
     getDistance(date) {
       return getDistanceDate(date)
     },

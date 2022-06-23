@@ -18,14 +18,21 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-function generationId(path) {
-    const _articlesRef = ref(database, path)
+async function generationId(path) {
+    const _articlesRef = await ref(database, path)
     return push(_articlesRef)
 }
 
-function writeArticlesData(path, data) {
+async function writeArticlesData(path, data) {
     data.created = getCurrentDate();
-    return set(generationId(`${BASE_URL}/articles/${path}`), data);
+    const key = await generationId(`${BASE_URL}/articles/${path}`).then(res => {
+        return res
+    })
+    await set(key, data);
+    return {
+        id: key.key,
+        data
+    }
 }
 
 //
@@ -45,14 +52,10 @@ async function writeTagData(data) {
 
 }
 
-function getBase(path){
+function getBase(path ){
     const dbRef = ref(getDatabase());
     return get(child(dbRef, `${BASE_URL}/${path}`)).then(res => {
-        if (res.exists()) {
-            return res.val()
-        } else {
-            return "Данные не найдены";
-        }
+        return res.val()
     }).catch(e => {
         throw e
     })
@@ -60,8 +63,8 @@ function getBase(path){
 
 function removeArticle(path) {
     const dbRef = ref(getDatabase());
-    set(child(dbRef, `${BASE_URL}/articles/${path}`), null).then(r =>{
-        console.log(r)
+    return set(child(dbRef, `${BASE_URL}/articles/${path}`), null).then(res => {
+        return res
     });
 }
 

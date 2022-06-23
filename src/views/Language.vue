@@ -15,8 +15,8 @@
       <redactor v-if="adding" :tags="tags" :name-language="languageName"/>
 
       <div v-else>
-        <div v-if="typeof articles === 'object'" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
-          <div class="col p-2" v-for="(article, id) of articles" :key="id">
+        <div v-if="!articlesIsEmpty" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
+          <div class="col p-2" v-for="(article, id) of articles[languageName]" :key="id">
             <div class="card">
               <button class="remove-icon" @click="removeItem(id)">
                 <img src="@/assets/images/icons/trash.svg" alt="Удалить" class="remove-icon__img">
@@ -25,7 +25,7 @@
                 <h5 class="card-title mb-0">{{ articleTitle(article) }}</h5>
                 <p class="card-author text-muted mb-2">Автор: <span class="fst-italic">Критисна Матусевич</span></p>
                 <div class="badges">
-                  <badge v-for="(tag, idx) of article.tags" :key="tag + idx" :name="tag"/>
+                  <badge v-for="(tag) of article.tags" :key="tag.name + tag.bg_color" :tag="tag"/>
                 </div>
                 <div class="description mt-1 mb-3">
                   <p class="card-text text-truncate">{{ articleDesc(article) }}</p>
@@ -40,7 +40,7 @@
         </div>
 
 
-        <div v-if="typeof articles === 'string'" class="d-flex flex-column align-items-center justify-content-center">
+        <div v-else class="d-flex flex-column align-items-center justify-content-center">
           <h2>Здесь пока нет не одной статьи</h2>
           <p>Что бы добавить статью нажмите на кнопку </p>
           <button class="btn btn-add d-flex align-items-center" @click="adding = !adding">
@@ -57,9 +57,10 @@
 </template>
 <script>
 import 'vue-select/dist/vue-select.css';
-import {getBase, removeArticle} from "@/assets/api/firebase";
+import {articleTitle, articleDesc} from "@/assets/js/function";
 import Redactor from "@/components/redactor";
 import Badge from "@/components/Badge";
+import {mapGetters, mapActions} from "vuex";
 
 export default {
   name: "Language",
@@ -67,64 +68,35 @@ export default {
   components: {Badge, Redactor},
   data() {
     return {
-      tags: [],
-      articles: [],
-      reload: 0,
       adding: false
     }
   },
   computed: {
+    ...mapGetters(['getTags', 'getArticles', 'getError']),
+    articles() {
+      return this.getArticles
+    },
+    tags(){
+      return this.getTags
+    },
     languageName() {
       return this.$route.params.name
     },
-
-  },
-  mounted() {
-    this.reload++
+    error() {
+      return this.getError
+    },
+    articlesIsEmpty() {
+      return Object.keys(this.articles).length === 0
+    }
   },
   methods: {
-    articleTitle(article) {
-      let title = ''
-
-      let start = article.article.search('<h1>')
-      let end = article.article.search('<p>')
-      title = article.article.slice(start, end).replace(/<h1>/g, '').replace(/<\/h1>/g, '')
-
-      return title
-    },
-    articleDesc(article) {
-
-      let desc = ''
-      let regArrHead = ['h2', 'h3', 'h4', 'h5', 'h6']
-      let description = article.article.replace(/<p><br><\/p>/g, '')
-      for (let i = 0; i < regArrHead.length; i++) {
-        description = description.replace(new RegExp(`<h${regArrHead[i]}>`, 'g')).replace(new RegExp(`</h${regArrHead[i]}>`, 'g'))
-      }
-
-      let start = description.search('<p>')
-      let end = description.search('</p>')
-      desc = description.slice(start, end + 4)
-
-      return desc.replace(/<p>/g, '').replace(/<\/p>/g, '')
-    },
+    ...mapActions(['remove_article__base']),
+    articleTitle,
+    articleDesc,
     removeItem(id) {
-      removeArticle(`${this.languageName}/${id}`)
-      this.reload++
-    },
-    async getTags() {
-      this.tags = await getBase('tags')
-    },
-    async getArticles() {
-      this.articles = await getBase(`articles/${this.languageName}`)
+      this.remove_article__base({languageName: this.languageName, id})
     },
   },
-  watch: {
-    reload() {
-      this.articles = []
-      this.getTags()
-      this.getArticles()
-    },
-  }
 }
 </script>
 
