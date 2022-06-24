@@ -33,8 +33,10 @@ export default {
     }
   },
   async mounted() {
+    this.$loading.show({delay:0})
     await this.$store.dispatch('get_article__base', 'articles')
     await this.$store.dispatch('get_tags__base', 'tags')
+    this.$loading.hide()
   },
   computed: {
     colClass() {

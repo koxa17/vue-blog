@@ -1,7 +1,7 @@
 <template>
   <div class="language">
     <div class="top mb-4 d-flex align-items-center">
-      <h1 class="me-2">{{ languageName.toUpperCase() }}</h1>
+      <h1 class="me-2">Все статьи</h1>
       <button class="btn btn-add d-flex align-items-center" @click="adding = !adding">
         <img src="@/assets/images/icons/plus-circle.svg" alt="" class="me-1" v-if="!adding">
         <img src="@/assets/images/icons/arrow-left-circle.svg" alt="" class="me-1" v-if="adding">
@@ -12,13 +12,13 @@
 
     <main>
 
-      <redactor v-if="adding" :tags="tags" :name-language="languageName"/>
+      <redactor v-if="adding" :tags="tags"/>
 
       <div v-else>
         <div v-if="!articlesIsEmpty" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
-          <div class="col p-2" v-for="(article, id) of articles[languageName]" :key="id">
+          <div class="col p-2" v-for="(article, id) of articles" :key="id">
             <div class="card">
-              <button class="remove-icon" @click="removeItem(id)">
+              <button class="remove-icon" @click="removeItem(articleTitle(article), id)">
                 <img src="@/assets/images/icons/trash.svg" alt="Удалить" class="remove-icon__img">
               </button>
               <div class="card-body d-flex flex-column">
@@ -79,9 +79,6 @@ export default {
     tags(){
       return this.getTags
     },
-    languageName() {
-      return this.$route.params.name
-    },
     error() {
       return this.getError
     },
@@ -93,8 +90,23 @@ export default {
     ...mapActions(['remove_article__base']),
     articleTitle,
     articleDesc,
-    removeItem(id) {
-      this.remove_article__base({languageName: this.languageName, id})
+    removeItem(title, id) {
+      this.$dialog({
+        title: title,
+        content: `Вы уверены что хотите удалить статью"?`,
+        btns: [{
+          label: 'Да',
+          color: '#198754',
+          callback: () => {
+            this.remove_article__base({id})
+          },
+        },
+          {
+            label: 'Отмена',
+            color: '#dc3545',
+            ghost: true,
+          }],
+      })
     },
   },
 }

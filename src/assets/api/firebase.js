@@ -23,9 +23,9 @@ async function generationId(path) {
     return push(_articlesRef)
 }
 
-async function writeArticlesData(path, data) {
+async function writeArticlesData(data) {
     data.created = getCurrentDate();
-    const key = await generationId(`${BASE_URL}/articles/${path}`).then(res => {
+    const key = await generationId(`${BASE_URL}/articles`).then(res => {
         return res
     })
     await set(key, data);

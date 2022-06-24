@@ -22,25 +22,14 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    // переделать добавление, так как это обьект а не массив
     add_article__state(state, payload) {
-      if(state.articles[payload.nameLanguage]){
-        state.articles[payload.nameLanguage][payload.article.id] = payload.article.data
-      } else {
-        state.articles[payload.nameLanguage] = {
-          [payload.article.id]: payload.article.data
-        }
-      }
+      Vue.set(state.articles, payload.id, payload.data)
     },
     set_article__state(state, payload) {
       state.articles = payload
     },
     delete_article__state(state, data){
-      state.articles.map(language => {
-        return language.filter(lang => {
-          return data.id !== lang
-        })
-      })
+      Vue.delete(state.articles, data.id)
     },
     add_tag__state(state, payload) {
       state.tags.push(payload)
@@ -54,8 +43,8 @@ export default new Vuex.Store({
   },
   actions: {
     save_article__base(context, payload) {
-      return writeArticlesData(payload.nameLanguage, payload.article).then((res) => {
-        context.commit('add_article__state', {nameLanguage: payload.nameLanguage, article: res})
+      return writeArticlesData(payload).then((res) => {
+        context.commit('add_article__state', res)
         return res
       }).catch(err => {
         throw err
@@ -75,9 +64,7 @@ export default new Vuex.Store({
       })
     },
     remove_article__base(context, payload){
-      const path = `${payload.languageName}/${payload.id}`
-      removeArticle(path).then((res) => {
-        console.log('remove', res)
+      removeArticle(payload.id).then(() => {
         context.commit('delete_article__state', payload)
       }).catch(err => {
         throw err

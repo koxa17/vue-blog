@@ -21,9 +21,8 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import vSelect from 'vue-select'
-import AWN from "awesome-notifications";
-import 'awesome-notifications/dist/style.css';
 import {mapActions} from "vuex";
+
 export default {
   name: "redactor",
   props: {
@@ -39,22 +38,6 @@ export default {
   components: {
     vSelect,
     VueEditor
-  },
-  mounted() {
-    this.notifications = new AWN({
-      position: "bottom-right",
-      maxNotifications: 5,
-      durations: {
-        global: 3000
-      },
-      labels: {
-        alert: '',
-        success: '',
-        tip: '',
-        warning: '',
-        info: ''
-      },
-    })
   },
   data() {
     return {
@@ -76,33 +59,23 @@ export default {
     saveContent() {
       if(this.validateArticles()){
         this.disabled = true
+        this.$loading.show({delay:0})
 
         const article = {
           article: this.content,
           tags: this.selected,
         }
 
-        // writeArticlesData(this.nameLanguage, article).then(() => {
-        //   this.content = '<h1>Название статьи</h1>'
-        //   this.selected = []
-        //   this.notifications.success('Статья успешно сохранена!')
-        // }).catch(err => {
-        //   this.notifications.alert(err)
-        //   throw err
-        // }).finally(() => {
-        //   this.disabled = false
-        // })
-
-        this.save_article__base({nameLanguage: this.nameLanguage, article}).then((res) => {
-          console.log(res)
+        this.save_article__base(article).then(() => {
             this.content = '<h1>Название статьи</h1>'
             this.selected = []
-            this.notifications.success('Статья успешно сохранена!')
+            this.$noty.success('Статья успешно сохранена!')
         }).catch(err => {
-            this.notifications.alert(err)
+            this.$noty.error(err)
             throw err
           }).finally(() => {
             this.disabled = false
+            this.$loading.hide()
           })
       }
 
@@ -115,7 +88,7 @@ export default {
         this.setTimeoutError = setTimeout(() => {
           this.error = {}
         }, 3000)
-        this.notifications.warning(this.error.msg)
+        this.$noty.warning(this.error.msg)
         return false
       } else if(!this.checkTags()){
         this.error = {
@@ -124,7 +97,7 @@ export default {
         this.setTimeoutError = setTimeout(() => {
           this.error = {}
         }, 3000)
-        this.notifications.warning(this.error.msg)
+        this.$noty.warning(this.error.msg)
         return false
       } else {
         return true
@@ -137,25 +110,25 @@ export default {
       return !(this.content === '<h1>Название статьи</h1>' || this.content === '<h1><br></h1>');
     },
     resetAll() {
-      let onOk = () => {
-        this.content = '<h1>Название статьи</h1>'
-        this.selected = []
-        this.error = {}
-        this.notifications.info('Все было очищенно!')
-      };
-      let onCancel = () => {return false}
-      this.notifications.confirm(
-          'Вы уверены что хотите все очистить?',
-          onOk,
-          onCancel,
+      this.$dialog({
+        title: 'Удаление!',
+        content: 'Вы уверены что хотите все очистить?',
+        btns: [{
+          label: 'Да',
+          color: '#198754',
+          callback: () => {
+            this.content = '<h1>Название статьи</h1>'
+            this.selected = []
+            this.error = {}
+            this.$noty.info('Все было очищенно!')
+          },
+        },
           {
-            labels: {
-              confirm: 'Внимание',
-              confirmOk: 'Да',
-              confirmCancel: 'Отмена'
-            }
-          }
-      )
+            label: 'Отмена',
+            color: '#dc3545',
+            ghost: true,
+          }],
+      })
     },
 
   }
