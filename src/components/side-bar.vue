@@ -8,12 +8,12 @@
     <nav class="p-0 m-0">
       <ul class="side__bar__menu d-flex d-md-block">
         <li class="side__bar__menu__item">
-          <a href="#" class="side__bar__menu__item__link">
+          <a href="#" class="side__bar__menu__item__link" data-bs-toggle="tooltip" data-bs-placement="right" title="Домой">
             <img src="@/assets/images/icons/home.svg" alt="" class="side__bar__menu__item__icon">
           </a>
         </li>
         <li class="side__bar__menu__item">
-          <a href="#" class="side__bar__menu__item__link">
+          <a href="#" class="side__bar__menu__item__link" data-bs-toggle="tooltip" data-bs-placement="right" title="Все статьи">
             <img src="@/assets/images/icons/blogs.svg" alt="" class="side__bar__menu__item__icon">
           </a>
         </li>

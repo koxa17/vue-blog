@@ -30,7 +30,7 @@
 
     </div>
 
-    <div class="modal" tabindex="-1" id="modal-added-tag">
+    <div class="modal" tabindex="-1" id="modal-added-tag" ref="modal-add-tag">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -68,7 +68,9 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Закрыть</button>
-            <button type="button" class="btn btn-success" @click="createNewTag">Сохранить</button>
+            <button type="button" class="btn btn-success" @click="createNewTag" :class="{disabled: disabled}">
+              Сохранить
+            </button>
           </div>
         </div>
       </div>
@@ -200,7 +202,9 @@ export default {
           }],
       })
     },
-    async createNewTag() {
+    createNewTag() {
+      this.$loading.show({delay: 0})
+      this.disabled = true
       if (!this.tagName) {
         this.error.validate = 'inputNewTagName'
         this.error.msg = 'Название тега обязательно для заполнения!'
@@ -215,25 +219,40 @@ export default {
         this.error = {}
       }, 3000)
 
-      const tagExists = this.tags.find(tag => {
-        return tag.name === this.newTag.name
-      })
+      let tagExists = false
 
-      if (!tagExists) {
+      if (this.IsEmpty(this.tags)) {
+        tagExists = this.tags.find(tag => {
+          return tag.name === this.newTag.name
+        })
+      }
+
+      if (tagExists) {
         this.error.validate = 'tageExists'
         this.error.msg = 'Такой тег уже существует!'
         this.$noty.error(this.error.msg)
       } else {
-        await this.save_tags__base(this.newTag)
-        this.addingTag = false
-        this.colorsPick = "#707070"
-        this.tagName = ''
-        this.$set(this.newTag, '', {
-          name: 'html',
-          bg_color: '#707070'
-        })
-      }
+        setTimeout(async () => {
+          const tag = {}
+          Object.assign(tag, this.newTag)
+          await this.save_tags__base(tag)
+          this.addingTag = false
+          this.colorsPick = "#707070"
+          this.tagName = ''
+          this.$set(this.newTag, '', {
+            name: 'html',
+            bg_color: '#707070'
+          })
+          this.disabled = false
+          this.$loading.hide()
+        }, 1000)
 
+      }
+    },
+    IsEmpty(obj) {
+      if (obj !== null && typeof obj === 'object') {
+        return Object.keys(obj).length === 0
+      }
     }
   },
   computed: {

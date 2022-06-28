@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import {getBase, removeArticle, writeArticlesData, writeTagData} from "@/assets/api/firebase";
+import {getBase, removeArticle, writeArticlesData, updateData} from "@/assets/api/firebase";
 
 Vue.use(Vuex);
 
@@ -78,9 +78,12 @@ export default new Vuex.Store({
       })
     },
     save_tags__base(context, payload) {
-      writeTagData(payload).then(res => {
+      updateData('tags',payload).then(res => {
         console.log('save-tag', res)
         context.commit('add_tag__state', payload)
+        return res
+      }).catch((err) => {
+        throw err
       })
     }
   },

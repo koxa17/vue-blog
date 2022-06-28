@@ -2,8 +2,8 @@
 import { initializeApp } from "firebase/app";
 import {child, get, getDatabase, push, ref, set, update} from "firebase/database";
 import {getCurrentDate} from "@/assets/js/date";
-import {createArray} from "@/assets/js/function";
 import {BASE_URL} from "@/assets/api/constapi";
+import {createArray} from "@/assets/js/function";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAi0sbW_ixn3d4F3hWaCEXyGcctsywQL-U",
@@ -19,8 +19,8 @@ const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
 async function generationId(path) {
-    const _articlesRef = await ref(database, path)
-    return push(_articlesRef)
+    const _ref = await ref(database, path)
+    return push(_ref)
 }
 
 async function writeArticlesData(data) {
@@ -38,18 +38,23 @@ async function writeArticlesData(data) {
 //
 // @params data string
 // передаем новый тег
-async function writeTagData(data) {
+async function updateData(path,data) {
     const db = getDatabase()
-
-    const currentTags = await get(child(ref(db), `${BASE_URL}/tags`)).then(res => {
-        return res.val()
-    })
-
     const updates = {}
-    updates[`${BASE_URL}/tags`] = createArray(currentTags, data)
+
+
+
+    if(path.includes('tags')) {
+        const dbRef = ref(getDatabase());
+        const allTags = await get(child(dbRef, `${BASE_URL}/tags`)).then(res => {
+            return res.val()
+        })
+        updates[`${BASE_URL}/${path}`] = createArray(allTags, data)
+    } else {
+        updates[`${BASE_URL}/${path}`] = data
+    }
 
     return update(ref(db), updates);
-
 }
 
 function getBase(path ){
@@ -68,5 +73,12 @@ function removeArticle(path) {
     });
 }
 
+function removeTag(path) {
+    const dbRef = ref(getDatabase());
+    return set(child(dbRef, `${BASE_URL}/tags/${path}`), null).then(res => {
+        return res
+    });
+}
 
-export {writeArticlesData, writeTagData, getBase, removeArticle}
+
+export {writeArticlesData, updateData, getBase, removeArticle, removeTag}
