@@ -21,6 +21,7 @@
     </nav>
     <div class="user ms-md-auto me-md-auto">
       <img src="@/assets/images/img_avatar-man.png" alt="Avatar" class="avatar">
+<!--      <img src="@/assets/images/avatar_anonymous.svg" alt="Avatar" class="avatar">-->
     </div>
   </div>
 </template>
