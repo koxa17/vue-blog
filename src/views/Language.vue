@@ -1,6 +1,6 @@
 <template>
   <div class="language">
-    <div class="top mb-4 d-flex align-items-center">
+    <div class="top mb-4 d-flex align-items-center justify-content-between">
       <h1 class="me-2">Все статьи</h1>
       <button class="btn btn-add d-flex align-items-center" @click="adding = !adding">
         <img src="@/assets/images/icons/plus-circle.svg" alt="" class="me-1" v-if="!adding">

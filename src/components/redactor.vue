@@ -30,7 +30,7 @@
 
     </div>
 
-    <div class="modal" tabindex="-1" id="modal-added-tag" ref="modal-add-tag">
+    <div class="modal" tabindex="-1" id="modal-added-tag" ref="modal_added_tag">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -41,17 +41,18 @@
             <form class="row mb-2">
 
               <div class="col-12 mb-2">
-                <label for="specificSizeInputName">Название тега</label>
+                <label for="tag_name">Название тега</label>
                 <input type="text" v-model="tagName" class="form-control"
-                       :class="{error: error.validate === 'inputNewTagName'}" id="specificSizeInputName"
+                       :class="{error: error.validate === 'inputNewTagName'}" id="tag_name"
                        placeholder="Например 'html'" autocomplete="false">
               </div>
 
               <div class="col-12 mb-2">
                 <label for="color-input-pick">Выберите цвет тега</label>
-                <input type="text" v-model="colorsPick.hex" class="form-control"
+                <input type="text" v-model="colorsPick.hex" class="form-control color-input-pick"
                        :class="{error: error.validate === 'inputColorPicker'}" id="color-input-pick"
-                       placeholder="#194D33A8" autocomplete="false" readonly @click="addingTag = !addingTag">
+                       placeholder="#194D33A8" autocomplete="false" readonly @click="addingTag = !addingTag"
+                       :style="{'backgroundColor': colorsPick.hex}">
               </div>
 
               <div class="col-12 mb-3" v-show="addingTag" @dblclick="addingTag = false">
@@ -67,7 +68,8 @@
 
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Закрыть</button>
+            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" ref="btn_close_modal">Закрыть
+            </button>
             <button type="button" class="btn btn-success" @click="createNewTag" :class="{disabled: disabled}">
               Сохранить
             </button>
@@ -203,51 +205,70 @@ export default {
       })
     },
     createNewTag() {
-      this.$loading.show({delay: 0})
-      this.disabled = true
       if (!this.tagName) {
-        this.error.validate = 'inputNewTagName'
-        this.error.msg = 'Название тега обязательно для заполнения!'
+        this.error = {
+          validate: 'inputNewTagName',
+          msg: 'Название тега обязательно для заполнения!'
+        }
         this.$noty.error(this.error.msg)
+        return false
       } else if (this.newTag.bg_color === '#707070') {
-        this.error.validate = 'inputColorPicker'
-        this.error.msg = 'Нужно выбрать цвет!'
+        this.error = {
+          validate: 'inputColorPicker',
+          msg: 'Нужно выбрать цвет!'
+        }
         this.$noty.error(this.error.msg)
+        return false
       }
-
-      this.setTimeoutError = setTimeout(() => {
-        this.error = {}
-      }, 3000)
 
       let tagExists = false
 
-      if (this.IsEmpty(this.tags)) {
+      if (!this.IsEmpty(this.tags)) {
         tagExists = this.tags.find(tag => {
           return tag.name === this.newTag.name
         })
       }
 
       if (tagExists) {
-        this.error.validate = 'tageExists'
-        this.error.msg = 'Такой тег уже существует!'
+        this.error = {
+          validate: 'tageExists',
+          msg: `Тег "${this.newTag.name}" уже существует!`
+        }
         this.$noty.error(this.error.msg)
+        this.$refs.modal_added_tag.querySelector('#tag_name').focus()
       } else {
         setTimeout(async () => {
           const tag = {}
+          this.$loading.show({delay: 0})
+          this.disabled = true
           Object.assign(tag, this.newTag)
-          await this.save_tags__base(tag)
-          this.addingTag = false
-          this.colorsPick = "#707070"
-          this.tagName = ''
-          this.$set(this.newTag, '', {
-            name: 'html',
-            bg_color: '#707070'
+          this.save_tags__base(tag).then((res) => {
+            this.addingTag = false
+            this.colorsPick = "#707070"
+            this.tagName = ''
+            this.$set(this.newTag, '', {
+              name: 'html',
+              bg_color: '#707070'
+            })
+            this.$noty.success(`Новый тег "${tag.name}" добавлен!`)
+            return res
+          }).catch(err => {
+            this.$noty.error('Упс... Что-то пошло не так! Попробуйте еще раз!')
+            throw err
+          }).finally(() => {
+            this.disabled = false
+            this.$loading.hide()
+            this.$refs.btn_close_modal.click()
           })
-          this.disabled = false
-          this.$loading.hide()
         }, 1000)
-
       }
+
+
+      this.setTimeoutError = setTimeout(() => {
+        this.error = {}
+      }, 3000)
+
+
     },
     IsEmpty(obj) {
       if (obj !== null && typeof obj === 'object') {
@@ -302,5 +323,10 @@ export default {
     width: 100px;
     height: 55px;
   }
+}
+
+.color-input-pick {
+  text-shadow: 1px 1px 1px #000;
+  color: #fff;
 }
 </style>
