@@ -42,7 +42,7 @@
             <div class="card-body">
               <h5 class="card-title">Нет не одной статьи</h5>
               <p class="card-text">Нужно написать статью</p>
-              <a href="#" class="btn btn-outline-info">Написать</a>
+              <router-link to="/language" class="btn btn-outline-info">Написать</router-link>
             </div>
             <div class="card-footer text-muted">
               Сегодня: {{getDate()}}
